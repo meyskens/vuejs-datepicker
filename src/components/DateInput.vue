@@ -1,14 +1,8 @@
 <template>
-  <div :class="{ 'input-group': bootstrapStyling }">
+  <div :class="{'input-group' : bootstrapStyling}">
     <!-- Calendar Button -->
-    <span
-      v-if="calendarButton"
-      class="vdp-datepicker__calendar-button"
-      :class="{ 'input-group-prepend': bootstrapStyling }"
-      @click="showCalendar"
-      v-bind:style="{ 'cursor:not-allowed;': disabled }"
-    >
-      <span :class="{ 'input-group-text': bootstrapStyling }">
+    <span v-if="calendarButton" class="vdp-datepicker__calendar-button" :class="{'input-group-prepend' : bootstrapStyling}" @click="showCalendar" v-bind:style="{'cursor:not-allowed;' : disabled}">
+      <span :class="{'input-group-text' : bootstrapStyling}">
         <i :class="calendarButtonIcon">
           {{ calendarButtonIconContent }}
           <span v-if="!calendarButtonIcon">&hellip;</span>
@@ -32,16 +26,10 @@
       @click="showCalendar"
       @keyup="parseTypedDate"
       @blur="inputBlurred"
-      autocomplete="off"
-    />
+      autocomplete="off">
     <!-- Clear Button -->
-    <span
-      v-if="clearButton && selectedDate"
-      class="vdp-datepicker__clear-button"
-      :class="{ 'input-group-append': bootstrapStyling }"
-      @click="clearDate()"
-    >
-      <span :class="{ 'input-group-text': bootstrapStyling }">
+    <span v-if="clearButton && selectedDate" class="vdp-datepicker__clear-button" :class="{'input-group-append' : bootstrapStyling}" @click="clearDate()">
+      <span :class="{'input-group-text' : bootstrapStyling}">
         <i :class="clearButtonIcon">
           <span v-if="!clearButtonIcon">&times;</span>
         </i>
@@ -51,7 +39,7 @@
   </div>
 </template>
 <script>
-import { makeDateUtils } from "../utils/DateUtils";
+import { makeDateUtils } from '../utils/DateUtils'
 export default {
   props: {
     selectedDate: Date,
@@ -74,77 +62,71 @@ export default {
     required: Boolean,
     typeable: Boolean,
     bootstrapStyling: Boolean,
-    useUtc: Boolean,
+    useUtc: Boolean
   },
-  data() {
-    const constructedDateUtils = makeDateUtils(this.useUtc);
+  data () {
+    const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
       input: null,
       typedDate: false,
-      utils: constructedDateUtils,
-    };
+      utils: constructedDateUtils
+    }
   },
   computed: {
-    formattedValue() {
+    formattedValue () {
       if (!this.selectedDate) {
-        return null;
+        return null
       }
       if (this.typedDate) {
-        return this.typedDate;
+        return this.typedDate
       }
-      return typeof this.format === "function"
+      return typeof this.format === 'function'
         ? this.format(this.selectedDate)
-        : this.utils.formatDate(
-            new Date(this.selectedDate),
-            this.format,
-            this.translation
-          );
+        : this.utils.formatDate(new Date(this.selectedDate), this.format, this.translation)
     },
 
-    computedInputClass() {
+    computedInputClass () {
       if (this.bootstrapStyling) {
-        if (typeof this.inputClass === "string") {
-          return [this.inputClass, "form-control"].join(" ");
+        if (typeof this.inputClass === 'string') {
+          return [this.inputClass, 'form-control'].join(' ')
         }
-        return { "form-control": true, ...this.inputClass };
+        return {'form-control': true, ...this.inputClass}
       }
-      return this.inputClass;
-    },
+      return this.inputClass
+    }
   },
   watch: {
-    resetTypedDate() {
-      this.typedDate = false;
-    },
+    resetTypedDate () {
+      this.typedDate = false
+    }
   },
   methods: {
-    showCalendar() {
-      this.$emit("showCalendar");
+    showCalendar () {
+      this.$emit('showCalendar')
     },
     /**
      * Attempt to parse a typed date
      * @param {Event} event
      */
-    parseTypedDate(event) {
+    parseTypedDate (event) {
       // close calendar if escape or enter are pressed
-      if (
-        [
-          27, // escape
-          13, // enter
-        ].includes(event.keyCode)
-      ) {
-        this.input.blur();
+      if ([
+        27, // escape
+        13 // enter
+      ].includes(event.keyCode)) {
+        this.input.blur()
       }
 
       if (this.typeable) {
-        let val = this.input.value;
-        if (this.translation.language !== "en") {
-          val = val.replace(/([0-9]+)\/([0-9]+)/, "$2/$1");
-          val = val.replace(/([0-9]+)-([0-9]+)/, "$2-$1");
+        let val = this.input.value
+        if (this.translation.language !== 'en') {
+          val = val.replace(/([0-9]+)\/([0-9]+)/, '$2/$1')
+          val = val.replace(/([0-9]+)-([0-9]+)/, '$2-$1')
         }
-        const typedDate = Date.parse(val);
+        const typedDate = Date.parse(val)
         if (!isNaN(typedDate)) {
-          this.typedDate = this.input.value;
-          this.$emit("typedDate", new Date(this.typedDate));
+          this.typedDate = this.input.value
+          this.$emit('typedDate', new Date(this.typedDate))
         }
       }
     },
@@ -152,33 +134,33 @@ export default {
      * nullify the typed date to defer to regular formatting
      * called once the input is blurred
      */
-    inputBlurred() {
+    inputBlurred () {
       if (this.typeable) {
-        let val = this.input.value;
-        if (this.translation.language !== "en") {
-          val = val.replace(/([0-9]+)\/([0-9]+)/, "$2/$1");
-          val = val.replace(/([0-9]+)-([0-9]+)/, "$2-$1");
+        let val = this.input.value
+        if (this.translation.language !== 'en') {
+          val = val.replace(/([0-9]+)\/([0-9]+)/, '$2/$1')
+          val = val.replace(/([0-9]+)-([0-9]+)/, '$2-$1')
         }
-
         if (isNaN(Date.parse(val))) {
-          this.clearDate();
-          this.input.value = null;
-          this.typedDate = null;
+          this.clearDate()
+          this.input.value = null
+          this.typedDate = null
         }
       }
 
-      this.$emit("closeCalendar");
+      this.$emit('closeCalendar')
     },
     /**
      * emit a clearDate event
      */
-    clearDate() {
-      this.$emit("clearDate");
-    },
+    clearDate () {
+      this.$emit('clearDate')
+    }
   },
-  mounted() {
-    this.input = this.$el.querySelector("input");
-  },
-};
+  mounted () {
+    this.input = this.$el.querySelector('input')
+  }
+}
 // eslint-disable-next-line
+;
 </script>
