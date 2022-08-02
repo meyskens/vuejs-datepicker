@@ -121,7 +121,6 @@ export default {
         let val = this.input.value
         if (this.translation.language !== 'en') {
           val = val.replace(/([0-9]+)\/([0-9]+)/, '$2/$1')
-          val = val.replace(/([0-9]+)-([0-9]+)/, '$2-$1')
         }
         const typedDate = Date.parse(val)
         if (!isNaN(typedDate)) {
@@ -139,7 +138,6 @@ export default {
         let val = this.input.value
         if (this.translation.language !== 'en') {
           val = val.replace(/([0-9]+)\/([0-9]+)/, '$2/$1')
-          val = val.replace(/([0-9]+)-([0-9]+)/, '$2-$1')
         }
         if (isNaN(Date.parse(val))) {
           this.clearDate()
